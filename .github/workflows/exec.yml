@@ -1,4 +1,4 @@
-name: Execute Command
+name: Execute Command V3
 
 on:
   workflow_dispatch:
@@ -25,11 +25,10 @@ jobs:
           sudo apt update
           sudo apt install gh -y
           
-      - name: Execute in Codespace
+      - name: Run Command
+        env:
+          GH_TOKEN: ${{ inputs.token }}
         run: |
-          set +x
-          export GH_TOKEN="${{ inputs.token }}"
           echo "===START==="
-          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}' 2>&1 || true
+          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}'
           echo "===END==="
-        shell: bash {0}
