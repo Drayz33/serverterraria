@@ -1,0 +1,35 @@
+name: Execute Command
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        required: true
+        type: string
+      codespace:
+        required: true
+        type: string
+      token:
+        required: true
+        type: string
+
+jobs:
+  exec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install GitHub CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh -y
+          
+      - name: Execute in Codespace
+        run: |
+          set +x
+          export GH_TOKEN="${{ inputs.token }}"
+          echo "===START==="
+          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}' 2>&1 || true
+          echo "===END==="
+        shell: bash {0}
