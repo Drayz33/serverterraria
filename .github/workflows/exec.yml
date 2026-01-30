@@ -1,4 +1,4 @@
-name: Execute Command V3
+name: Execute Command V4
 
 on:
   workflow_dispatch:
@@ -29,6 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.token }}
         run: |
+          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}' > /tmp/output.txt 2>&1 || true
           echo "===START==="
-          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}'
+          cat /tmp/output.txt
           echo "===END==="
