@@ -1,4 +1,4 @@
-name: Execute Command V4
+name: Execute Command V5
 
 on:
   workflow_dispatch:
@@ -29,7 +29,13 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.token }}
         run: |
-          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}' > /tmp/output.txt 2>&1 || true
           echo "===START==="
+          echo "Executando comando no codespace..."
+          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}' 2>&1 | tee /tmp/output.txt
+          echo ""
+          echo "--- Conteúdo capturado ---"
           cat /tmp/output.txt
+          echo "--- Fim do output ---"
+          echo "Tamanho do arquivo: $(wc -c < /tmp/output.txt) bytes"
+          echo "Linhas: $(wc -l < /tmp/output.txt)"
           echo "===END==="
