@@ -1,0 +1,2 @@
+# serverterraria
+Servidor Terraria - serverterraria
