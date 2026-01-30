@@ -29,6 +29,6 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.token }}
         run: |
-  export GH_TOKEN="${{ inputs.token }}"
-  gh codespace ssh -c "${{ inputs.codespace }}" -- "${{ inputs.command }} 2>&1 | sed 's/^/__OUT__ /'
-  "
+          echo "===START==="
+          gh codespace ssh -c "${{ inputs.codespace }}" -- '${{ inputs.command }}'
+          echo "===END==="
